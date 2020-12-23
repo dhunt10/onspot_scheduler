@@ -129,15 +129,6 @@ create table time_slot (
 );
 -- company, patient, patient_has_community, visit, doctor, lifetsyle_director, derma_drive, health_insurance, APPOINTMENTS, providers
 
-insert into provider (provider_name) values
-("Humana");
-
-insert into company (company_name, address) values
-("Facebook", "105 reservation road andover ma 01810");
-
-
-insert into patient values
-(1, 'Darin Hunt', 'hunt.dar@northeastern.edu', '9788065045', '1998-03-10', "Fat");
 
 
 SELECT LAST_INSERT_ID();
@@ -145,8 +136,7 @@ select * from provider;
 
 select * from company;
 
-insert into company (company_name, address) values
-('paseo', '105 reservation road andover ma 01810');
+
 
 insert into doctor (doctor_name) values 
 ('Dr. Camisa');
