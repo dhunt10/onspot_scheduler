@@ -34,7 +34,12 @@ class make_appointment(Resource):
                             required=True)
         self.parser = parser
 
-api.add_resource(make_appointment, '/add_derma_drive')
+    def get(self):
+        args = self.parser.parse_args()
+        conn.create_appointment(args.time, args.company, args.date, args.first_name, args.last_name, args.reason, args.phone)
+        return "Appointment Created"
+
+api.add_resource(make_appointment, '/make_appointment')
 
 if __name__ == '__main__':
     app.debug = True

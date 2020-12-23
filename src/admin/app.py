@@ -1,3 +1,5 @@
+import datetime
+
 from query import admin_connection
 from flask import Flask, request, Response
 from flask_restful import Resource, Api, reqparse
@@ -156,8 +158,9 @@ class add_derma_drive(Resource):
 
     def get(self):
         args = self.parser.parse_args()
-        date = args.year + '-' + args.month + '-' + args.day
-        conn.add_derma_drive(args.company_name, date, args.start_time, args.end_time)
+        #date = str(args.year) + '-' + str(args.month) + '-' + str(args.day)
+        #date = datetime.datetime(args.year, args.month, args.day)
+        conn.add_derma_drive(args.company_name, "2021-02-20", args.start_time, args.end_time)
 
 api.add_resource(HealthCheck, '/')
 api.add_resource(post_company, '/add_company')

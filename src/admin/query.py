@@ -7,7 +7,7 @@ class admin_connection:
     self.mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="***********",
+    password="**********",
     database="onspot_scheduler",
     auth_plugin='mysql_native_password'
   )
@@ -80,8 +80,8 @@ class admin_connection:
   def add_derma_drive(self, company_name, derma_drive_date, start_time, end_time):
     mycursor = self.mydb.cursor()
     company_id = id_getter_from_name(self.mydb, company_name, "company")
-    sql = "INSERT INTO derma_drive (company_id, derma_drive_date) values (%s, %s)"
-    val = (company_id, derma_drive_date)
+    sql = "INSERT INTO derma_drive (company_id, derma_drive_date, start_time, end_time) values (%s, %s, %s, %s)"
+    val = (company_id, derma_drive_date, start_time, end_time)
     mycursor.execute(sql, val)
     day_maker(self.mydb, mycursor.lastrowid, start_time, end_time)
     self.mydb.commit()
