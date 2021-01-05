@@ -158,9 +158,30 @@ class add_derma_drive(Resource):
 
     def get(self):
         args = self.parser.parse_args()
-        #date = str(args.year) + '-' + str(args.month) + '-' + str(args.day)
-        #date = datetime.datetime(args.year, args.month, args.day)
-        conn.add_derma_drive(args.company_name, "2021-02-20", args.start_time, args.end_time)
+        date = str(args.year) + '-' + str(args.month) + '-' + str(args.day)
+        conn.add_derma_drive(args.company_name, date, args.start_time, args.end_time)
+
+class delete_derma_drive(Resource):
+    def __init__(self):
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('company_name',
+                            type=str,
+                            required=True)
+        parser.add_argument('year',
+                            type=str,
+                            required=True)
+        parser.add_argument('month',
+                            type=str,
+                            required=True)
+        parser.add_argument('day',
+                            type=str,
+                            required=True)
+        self.parser = parser
+    def get(self):
+        args = self.parser.parse_args()
+        date = str(args.year) + '-' + str(args.month) + '-' + str(args.day)
+        return conn.delete_drive(args.company_name, date)
+
 
 api.add_resource(HealthCheck, '/')
 api.add_resource(post_company, '/add_company')
@@ -169,6 +190,7 @@ api.add_resource(add_patient, '/add_patient')
 api.add_resource(add_doctor, '/add_doctor')
 api.add_resource(add_head_contact, '/add_head_contact')
 api.add_resource(add_derma_drive, '/add_derma_drive')
+api.add_resource(delete_derma_drive, '/delete_drive')
 
 if __name__ == '__main__':
     app.debug = True

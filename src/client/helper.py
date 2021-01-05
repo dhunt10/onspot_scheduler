@@ -1,3 +1,5 @@
+import datetime
+
 def id_getter_from_name(db, name, type):
     mycursor = db.cursor()
     mycursor.execute('select * from {} where {}_name like "%{}%"'.format(type, type, name))
@@ -19,7 +21,8 @@ def day_maker(db, derma_drive_id, start_time, end_time):
 def find_derma_drive(db, company_name, date):
     mycursor = db.cursor()
     company_id = id_getter_from_name(db, company_name, "company")
-    mycursor.execute('select * from derma_drive where company_id = {}'.format(company_id))
+    date = date.replace('-', '')
+    mycursor.execute('select * from derma_drive where company_id = {} and derma_drive_date = {}'.format(company_id,date))
     return mycursor.fetchall()[0][0]
 
 def find_specific_person(db, first_name, last_name, phone):
@@ -44,3 +47,28 @@ def fill_time_slot(db, derma_drive_id, patient_id, time):
     mycursor = db.cursor()
     mycursor.execute('UPDATE time_slot SET patient_id = {} WHERE time_slot_time = {} and derma_drive_id = {}'
                      .format(patient_id, "\"" + time + "\"", derma_drive_id))
+
+def clear_time_slot(db, derma_drive_id, patient_id, time):
+    mycursor = db.cursor()
+    mycursor.execute('UPDATE time_slot SET patient_id = null WHERE time_slot_time = {} and derma_drive_id = {}'
+                     .format("\"" + time + "\"", derma_drive_id))
+
+def get_available_dates(db, company_name):
+  date_list = []
+  mycursor = db.cursor()
+  company_id = id_getter_from_name(db, company_name, "company")
+  mycursor.execute('select * from derma_drive where company_id = {}'.format(company_id))
+  dates = mycursor.fetchall()
+  for i in dates:
+      date_list.append(i[2])
+  return date_list
+
+def get_available_times(db, company_name, date):
+    time_list = []
+    mycursor = db.cursor()
+    drive_id = find_derma_drive(db, company_name, date)
+    mycursor.execute('select * from time_slot where derma_drive_id = {} and patient_id is null'.format(drive_id))
+    times = mycursor.fetchall()
+    for i in times:
+        time_list.append(str(i[2]))
+    return time_list

@@ -19,7 +19,8 @@ def day_maker(db, derma_drive_id, start_time, end_time):
 def find_derma_drive(db, company_name, date):
     mycursor = db.cursor()
     company_id = id_getter_from_name(db, company_name, "company")
-    mycursor.execute('select * from derma_drive where company_id = {}'.format(company_id))
+    date = date.replace('-', '')
+    mycursor.execute('select * from derma_drive where company_id = {} and derma_drive_date = {}'.format(company_id,date))
     return mycursor.fetchall()[0][0]
 
 def find_specific_person(db, first_name, last_name, phone):

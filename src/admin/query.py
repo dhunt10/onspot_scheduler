@@ -7,7 +7,7 @@ class admin_connection:
     self.mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="**********",
+    password="Familyguy10",
     database="onspot_scheduler",
     auth_plugin='mysql_native_password'
   )
@@ -80,10 +80,22 @@ class admin_connection:
   def add_derma_drive(self, company_name, derma_drive_date, start_time, end_time):
     mycursor = self.mydb.cursor()
     company_id = id_getter_from_name(self.mydb, company_name, "company")
+    edit_start_time = start_time + ":" + "00" + ":" + "00"
+    edit_end_time = end_time + ":" + "00" + ":" + "00"
     sql = "INSERT INTO derma_drive (company_id, derma_drive_date, start_time, end_time) values (%s, %s, %s, %s)"
-    val = (company_id, derma_drive_date, start_time, end_time)
+    val = (company_id, derma_drive_date, edit_start_time, edit_end_time)
     mycursor.execute(sql, val)
     day_maker(self.mydb, mycursor.lastrowid, start_time, end_time)
+    self.mydb.commit()
+
+  def delete_drive(self, company_name, date):
+    mycursor = self.mydb.cursor()
+    drive_id = find_derma_drive(self.mydb, company_name, date)
+    mycursor.execute('delete from appointment where derma_drive_id = {}'.format(drive_id))
+    mycursor = self.mydb.cursor()
+    mycursor.execute('delete from time_slot where derma_drive_id = {}'.format(drive_id))
+    mycursor = self.mydb.cursor()
+    mycursor.execute('delete from derma_drive where derma_drive_id = {}'.format(drive_id))
     self.mydb.commit()
 
 
